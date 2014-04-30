@@ -10,7 +10,7 @@ class CpuGraphite < Sensu::Plugin::Metric::CLI::Graphite
     :description => "Metric naming scheme, text to prepend to metric",
     :short => "-s SCHEME",
     :long => "--scheme SCHEME",
-    :default => "#{Socket.gethostname}.cpu"
+    :default => "/#{Socket.gethostname}/cpu"
 
   def get_proc_stats
     cpu_metrics = ['user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'guest']
@@ -47,8 +47,8 @@ class CpuGraphite < Sensu::Plugin::Metric::CLI::Graphite
     cpu_sample_diff = Hash[cpu_sample2.map { |k, v| [k, v - cpu_sample1[k]] }]
 
     cpu_metrics.each do |metric|
-      metric_val = sprintf("%.02f", (cpu_sample_diff[metric]/cpu_total_diff.to_f)*100)
-      output "#{config[:scheme]}.#{metric}", metric_val
+      metric_val = sprintf("%d", ((cpu_sample_diff[metric]/cpu_total_diff.to_f)*100).round)
+      output "#{config[:scheme]}/#{metric}", metric_val
     end
     ok
   end
