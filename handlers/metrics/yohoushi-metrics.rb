@@ -14,6 +14,8 @@ require "net/http"
 require "uri"
 
 class YohoushiMetrics < Sensu::Handler
+  REGEXP = /^(?<key>.+?)\t+(?<value>.+?)\t+(?<timestamp>.+?)$/
+
   # override filters from Sensu::Handler. not appropriate for metric handlers
   def filter
   end
@@ -26,7 +28,7 @@ class YohoushiMetrics < Sensu::Handler
           if matches
             Net::HTTP.start(settings['yohoushi']['host'], settings['yohoushi']['port']){|http|
               body = "number=#{matches[:value]}"
-              response = http.post(matches[:key], body)
+              response = http.post(settings['yohoushi']['endpoint'] + matches[:key], body)
             }
           end
         end
