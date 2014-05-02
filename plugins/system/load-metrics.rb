@@ -26,12 +26,6 @@ require 'socket'
 
 if RUBY_VERSION < '1.9.0'
   require 'bigdecimal'
-
-  class Float
-    def round(val = 0)
-       BigDecimal.new(self.to_s).round(val).to_f
-    end
-  end
 end
 
 class LoadStat < Sensu::Plugin::Metric::CLI::Graphite
@@ -60,9 +54,9 @@ class LoadStat < Sensu::Plugin::Metric::CLI::Graphite
     if config[:per_core]
       metrics = {
         :load_avg => {
-          :one => (result[0].to_f / number_of_cores).round(2),
-          :five => (result[1].to_f / number_of_cores).round(2),
-          :fifteen => (result[2].to_f / number_of_cores).round(2)
+          :one => (result[0].to_f / number_of_cores).round * 100,
+          :five => (result[1].to_f / number_of_cores).round * 100,
+          :fifteen => (result[2].to_f / number_of_cores).round * 100
         }
       }
     else
@@ -77,7 +71,7 @@ class LoadStat < Sensu::Plugin::Metric::CLI::Graphite
 
     metrics.each do |parent, children|
       children.each do |child, value|
-        output [config[:scheme], parent, child].join("."), value, timestamp
+        output [config[:scheme], parent, child].join("/"), value, timestamp
       end
     end
     ok
