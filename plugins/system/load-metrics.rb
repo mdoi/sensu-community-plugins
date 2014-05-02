@@ -54,17 +54,17 @@ class LoadStat < Sensu::Plugin::Metric::CLI::Graphite
     if config[:per_core]
       metrics = {
         :load_avg => {
-          :one => (result[0].to_f / number_of_cores).round * 100,
-          :five => (result[1].to_f / number_of_cores).round * 100,
-          :fifteen => (result[2].to_f / number_of_cores).round * 100
+          :one => ((result[0].to_f * 100) / number_of_cores).round,
+          :five => ((result[1].to_f * 100) / number_of_cores).round,
+          :fifteen => ((result[2].to_f * 100) / number_of_cores).round
         }
       }
     else
       metrics = {
         :load_avg => {
-           :one => result[0] * 100,
-           :five => result[1] * 100,
-           :fifteen => result[2] * 100
+           :one => (result[0].to_f * 100).round,
+           :five => (result[1].to_f * 100).round,
+           :fifteen => (result[2].to_f * 100).round
          }
       }
     end
