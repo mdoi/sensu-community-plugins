@@ -10,7 +10,7 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
     :description => "Metric naming scheme, text to prepend to metric",
     :short => "-s SCHEME",
     :long => "--scheme SCHEME",
-    :default => "#{Socket.gethostname}.memory"
+    :default => "/#{Socket.gethostname}/memory"
 
   def run
     # Metrics borrowed from hoardd: https://github.com/coredump/hoardd
@@ -31,7 +31,7 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
     mem['freeWOBuffersCaches'] = mem['free'] + (mem['buffers'] + mem['cached'])
 
     mem.each do |k, v|
-      output "#{config[:scheme]}.#{k}", v
+      output "#{config[:scheme]}/#{k}", v
     end
 
     ok
