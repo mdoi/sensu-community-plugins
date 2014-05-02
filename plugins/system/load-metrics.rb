@@ -62,9 +62,9 @@ class LoadStat < Sensu::Plugin::Metric::CLI::Graphite
     else
       metrics = {
         :load_avg => {
-           :one => result[0],
-           :five => result[1],
-           :fifteen => result[2]
+           :one => result[0] * 100,
+           :five => result[1] * 100,
+           :fifteen => result[2] * 100
          }
       }
     end
